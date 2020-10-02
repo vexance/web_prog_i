@@ -27,4 +27,9 @@
 %end
 </table>
 <hr/>
-<a href="/new_item">New Item... :-)</a>
+
+ %if len(rows) == 0:
+            <a href="/new_item">Add your first pasta!</a>
+        %else:
+            <a href="/new_item">New pasta rating</a>
+        %end
