@@ -15,14 +15,23 @@
     <div class="w3-container w3-padding-large">
     <table border="1" class="w3-table-all w3-centered w3-hoverable w3-card-4">
     <tr>
-        <th class="w3-blue-grey"><p>Noodle</p></td>
-        <th class="w3-blue-grey"><p>Sauce</p></td>
-        <th class="w3-blue-grey"><p>Rating</p></td>
-        <th class="w3-blue-grey"><p>Action</p></td>
+        <th class="w3-blue-grey"><p>Favorite</p></th>
+        <th class="w3-blue-grey"><p>Noodle</p></th>
+        <th class="w3-blue-grey"><p>Sauce</p></th>
+        <th class="w3-blue-grey"><p>Rating</p></th>
+        <th class="w3-blue-grey"><p>Action</p></th>
     </tr>
     
     %for row in rows:
         <tr>
+            <td>
+            %if fav == str(row[0]):
+                <a href="/favorite/{{row[0]}}/" class="material-icons" style="text-decoration: none">star</a>
+            %else:
+                <a href="/favorite/{{row[0]}}/" class="material-icons" style="text-decoration: none">star_outline</a>
+            %end
+            </td>
+
             <td><p>{{row[1]}}</p></td>
             <td><p>{{row[2]}}</p></td>
             <td><p>{{row[3]}}</p></td>

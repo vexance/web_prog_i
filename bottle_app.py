@@ -1,8 +1,8 @@
-# A very simple Bottle Hello World app for you to get started with...
+# Simple web programming class example app
 import os
 import sqlite3
 
-from bottle import get, post, request, template, redirect
+from bottle import get, post, request, response, template, redirect
 
 ON_PYTHONANYWHERE = "PYTHONANYWHERE_DOMAIN" in os.environ.keys()
 
@@ -14,13 +14,26 @@ else:
 
 @get('/')
 def get_show_list():
+    # Fetch database records
     connection = sqlite3.connect("spaghetti.db")
     cursor = connection.cursor()
     cursor.execute("select * from spaghetti")
     result = cursor.fetchall()
     cursor.close()
-    return template("show_list", rows=result)
 
+    # Now check the cookie for pasta favorites
+    fav_pasta = str(request.cookies.get('fav_pasta', -1))
+    return template("show_list", rows=result, fav=fav_pasta)
+
+@get('/favorite/<id:int>/')
+def get_favorite(id):
+    # Update or remove favorite pasta
+    current = request.cookies.get('fav_pasta', None)
+    if current == id:
+        response.set_cookie('fav_pasta', "")
+    else:
+        response.set_cookie('fav_pasta', str(id))
+    redirect('/')
 
 @get('/set_status/<id:int>/<rating:int>/')
 def get_set_rating(id, value):
