@@ -1,6 +1,13 @@
 # Simple web programming class example app
+import datetime
 import os
+import random
 import sqlite3
+import uuid
+
+from tinydb import TinyDB, Query
+db = TinyDB("sessions.json")
+query = Query()
 
 from bottle import get, post, request, response, template, redirect
 
@@ -10,7 +17,6 @@ if ON_PYTHONANYWHERE:
     from bottle import default_app
 else:
     from bottle import run, debug
-
 
 @get('/')
 def get_show_list():
@@ -44,11 +50,9 @@ def get_set_rating(id, value):
     cursor.close()
     redirect('/')
 
-
 @get('/new_item')
 def get_new_item():
     return template("new_item")
-
 
 @post('/new_item')
 def post_new_item():
@@ -62,7 +66,6 @@ def post_new_item():
     cursor.close()
     redirect('/')
 
-
 @get('/update_item/<id:int>')
 def get_update_item(id):
     connection = sqlite3.connect("spaghetti.db")
@@ -71,7 +74,6 @@ def get_update_item(id):
     result = cursor.fetchall()
     cursor.close()
     return template("update_item", row=result[0])
-
 
 @post('/update_item')
 def post_update_item():
@@ -96,10 +98,22 @@ def get_delete_item(id):
     cursor.close()
     redirect('/')
 
+@get("/visit")
+def get_visit():
+    session_id = request.cookies.get("session_id",str(uuid.uuid4()))
+    result = db.search(query.session_id == session_id)
+    if len(result) == 0:
+        db.insert({'session_id':session_id, 'visit_count':1})
+        visit_count = 1
+    else:
+        session = result[0]
+        visit_count = session['visit_count'] + 1
+        db.update({'visit_count':visit_count},query.session_id == session_id)
+    response.set_cookie("session_id",session_id)
+    return(f"Welcome, session_id #{session_id}. Visit# {visit_count}.")
+
 if ON_PYTHONANYWHERE:
     application = default_app()
 else:
     debug(True)
     run(host="localhost", port=80)
-
-
