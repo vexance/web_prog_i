@@ -7,9 +7,9 @@
     <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" >
 </head>
 
-<body>
-    <h3 class="w3-block w3-teal w3-center">Basic Pasta List, version 1.0</h3>
-    
+% include("header.tpl")
+
+<body>    
     <hr/>
     
     <div class="w3-container w3-padding-large">
@@ -43,12 +43,12 @@
     
     </table>
     </div>
-    
-    <hr/>
+
+    <hr />
 
     %if len(rows) == 0:
-        <a href="/new_item" class="w3-button w3-block w3-teal"><Get Started</a>
+        <div class="w3-center"><a href="/new_item" class="w3-button w3-round-xxlarge w3-blue-grey w3-border w3-border-teal" style="width: 20%">Get Started</a></div>
     %else:
-        <a href="/new_item" class="w3-button w3-block w3-teal">Add New Pasta Rating</a>
+        % include("footer.tpl")
     %end
 </body>

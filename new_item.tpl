@@ -10,9 +10,9 @@
 <body>
     <p class="w3-block w3-teal w3-center">New Pasta Rating</p>
     <form class="w3-center" action="/new_item" method="POST">
-        <input type="text" size="40" maxlength="32" name="noodle" value="Noodle Type" /> 
-        <input type="text" size="40" maxlength="32" name="sauce" value="Sauce" />
-        <input type="number" size="3" name="rating" value="5" /> 
+        <input type="text" size="40" maxlength="32" name="noodle" placeholder="Noodle Type" required /> 
+        <input type="text" size="40" maxlength="32" name="sauce" placeholder="Sauce" required />
+        <input type="number" size="3" name="rating" placeholder="5" required /> 
         <input type="submit" name="save" value="Add Rating"/>
     </form>
 
