@@ -7,10 +7,10 @@
             </div>
         </div>
     </form>
-    <form class="w3-third" action="/picture" method="Get">
+    <form class="w3-third" action="/graph_pastas" method="Get">
         <div class="w3-container">
             <div class="w3-blue-grey">
-                <h2><input class="w3-btn w3-block w3-center w3-padding-small" type="submit" value="Animation" /></h2>
+                <h2><input class="w3-btn w3-block w3-center w3-padding-small" type="submit" value="Graphing" /></h2>
             </div>
         </div>
     </form>

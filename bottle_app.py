@@ -235,6 +235,21 @@ def get_show_list_ajax():
 
     return template("show_list_ajax", session=session_id)
 
+@get('/graph_pastas')
+def graph_pastas():
+    session_id = request.cookies.get("session_id",None)
+    if session_id == None or session_id == "LoggedOut":
+        print(session_id)
+        redirect('/login')
+    else:   # had a cookie with an id, look up the session
+        result = db.search(query.session_id == session_id)
+        if len(result) == 0:    # the session isn't found, start a new one
+            redirect('/login')
+        else:   # the session is found, use it
+            session_id = result[0]
+            
+    return template('graph_pastas', session=session_id)
+
 #========== Run on Port 80 localy, or with PythonAnywhere defaults if hosted on PythonAnywhere.com ==========#
 if ON_PYTHONANYWHERE:
     application = default_app()
