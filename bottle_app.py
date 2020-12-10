@@ -5,10 +5,13 @@ import os
 import random
 import sqlite3
 import uuid
+import dataset
+import json
 from tinydb import TinyDB, Query
 from bottle import get, post, request, response, template, redirect, static_file
 
 db = TinyDB("sessions.json")
+static_pasta_data = dataset.connect('sqlite:///spaghetti.db')
 query = Query()
 random.seed()
 
@@ -24,13 +27,11 @@ def get_show_list():
     #========== Session check portion  ==========#
     session_id = request.cookies.get("session_id",None)
     if session_id == None or session_id == "LoggedOut":
-        print("one")
         print(session_id)
         redirect('/login')
     else:   # had a cookie with an id, look up the session
         result = db.search(query.session_id == session_id)
         if len(result) == 0:    # the session isn't found, start a new one
-            print("two")
             redirect('/login')
         else:   # the session is found, use it
             session_id = result[0]
@@ -201,6 +202,38 @@ def get_picture():
 def get_static(filename):
     print("searching for file...",filename)
     return static_file(filename, root='./static')
+
+@get('/get_pastas_json')
+def get_static_pastas():
+    session_id = request.cookies.get("session_id",None)
+    if session_id == None or session_id == "LoggedOut":
+        print(session_id)
+        redirect('/login')
+    else:   # had a cookie with an id, look up the session
+        result = db.search(query.session_id == session_id)
+        if len(result) == 0:    # the session isn't found, start a new one
+            redirect('/login')
+        else:   # the session is found, use it
+            response.content_type = 'application/json'
+            result = static_pasta_data['spaghetti'].all()
+            tasks= [dict(r) for r in result]
+            text = json.dumps(tasks)
+            return text
+
+@get('/show_list_ajax')
+def get_show_list_ajax():
+    session_id = request.cookies.get("session_id",None)
+    if session_id == None or session_id == "LoggedOut":
+        print(session_id)
+        redirect('/login')
+    else:   # had a cookie with an id, look up the session
+        result = db.search(query.session_id == session_id)
+        if len(result) == 0:    # the session isn't found, start a new one
+            redirect('/login')
+        else:   # the session is found, use it
+            session_id = result[0]
+
+    return template("show_list_ajax", session=session_id)
 
 #========== Run on Port 80 localy, or with PythonAnywhere defaults if hosted on PythonAnywhere.com ==========#
 if ON_PYTHONANYWHERE:
